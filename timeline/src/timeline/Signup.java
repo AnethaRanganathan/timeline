@@ -5,25 +5,16 @@
  */
 package timeline;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.Mongo;
 import java.awt.Color;
-import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import org.bson.BSONObject;
 
 /**
  *
@@ -257,90 +248,53 @@ public class Signup extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void submitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitActionPerformed
+    boolean ex=false;
+        String hash = null;
+    Connection conn=null;
+    PreparedStatement st=null;
+    ResultSet rs=null;
+    conn=Mysql.ConnectDB();
+    String uname=username_field.getText();
+    String mail=email_field.getText();
+    String exists="select * from users where username = '"+uname+"'";
         try {
-            /*boolean ex=false;
-            String hash = null;
-            Connection conn=null;
-            PreparedStatement st=null;
-            ResultSet rs=null;
-            conn=Mysql.ConnectDB();
-            String uname=username_field.getText();
-            String mail=email_field.getText();
-            String exists="select * from users where username = '"+uname+"'";
-            try {
             st=conn.prepareStatement(exists);
             
             System.out.println(exists);
             rs=st.executeQuery(exists);
             System.out.println("the value of rs is :"+rs.toString());
             if(rs.next()){
-            ex=true;
-            JOptionPane.showMessageDialog(null,"Username Already Exists");
-            this.dispose();
-            Login login=new Login();
-            login.setVisible(true);
+                ex=true;
+                JOptionPane.showMessageDialog(null,"Username Already Exists");
+                this.dispose();
+                Login login=new Login();
+                login.setVisible(true);
             }
-            } catch (SQLException e) {
-            }
-            
-            if((new String(password_field.getPassword())).equals(new String(retypepassword_field.getPassword()))){
-            String pwd=new String(password_field.getPassword());
-            if(!ex){
-            try {
-            Hash h=new Hash();
-            hash=h.encrypt(pwd);
-            System.out.println("inserting...");
-            String s ="insert into users (username,password,email) values('"+uname+"','"+hash+"','"+mail+"')";
-            System.out.println(s);
-            st = conn.prepareStatement(s);
-            st.executeUpdate(s);
-            JOptionPane n=new JOptionPane();
-            
-            n.showMessageDialog(null,"Account has been created you may now login");
-            this.dispose();
-            Login login=new Login();
-            login.setVisible(true);
-            } catch (NoSuchAlgorithmException | SQLException e) {
-            }}}
-            else{
-            JOptionPane.showMessageDialog(null,"Enter The Password Correctly");
-            }*/
-            Mongo m =  new Mongo();
-            DB db = m.getDB("timeline");
-            DBCollection collection = db.getCollection("loginform");
-            BasicDBObject obj = new BasicDBObject();
-            Hash h = new Hash();
-            String hash = null;
-            obj.put("username",username_field.getText());
-            obj.put("emailid",email_field.getText());
-            String pwd =new String( password_field.getPassword());
-            String rpwd= new String (retypepassword_field.getPassword());
-            if(pwd.equals(rpwd))
-            {
-                try {
-                    hash = h.encrypt(pwd);
-                    obj.put("password",hash);
-                System.out.println("sucesss");
-                
-                } catch (NoSuchAlgorithmException ex) {
-                    Logger.getLogger(Signup.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                //obj.put("password",password_field.getPassword());
-                //System.out.println("sucesss");
-                
-                collection.insert(obj);
-            }
-            else
-            {
-                JOptionPane.showMessageDialog(null,"incorrect password");
-            }
-            
-            
-            
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(Signup.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException e) {
         }
+        
+    if((new String(password_field.getPassword())).equals(new String(retypepassword_field.getPassword()))){
+    String pwd=new String(password_field.getPassword());
+    if(!ex){
+    try {
+        Hash h=new Hash();
+            hash=h.encrypt(pwd);
+          System.out.println("inserting...");  
+        String s ="insert into users (username,password,email) values('"+uname+"','"+hash+"','"+mail+"')";
+        System.out.println(s);  
+         st = conn.prepareStatement(s);
+   st.executeUpdate(s);
+   JOptionPane n=new JOptionPane();
    
+   n.showMessageDialog(null,"Account has been created you may now login");
+   this.dispose();
+   Login login=new Login();
+   login.setVisible(true);
+    } catch (NoSuchAlgorithmException | SQLException e) {
+        }}}
+        else{
+                       JOptionPane.showMessageDialog(null,"Enter The Password Correctly");
+    }
     
     
         

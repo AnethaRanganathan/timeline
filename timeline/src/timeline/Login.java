@@ -5,30 +5,16 @@
  */
 package timeline;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.Mongo;
-import com.mongodb.MongoClient;
-//import com.mongodb.client.FindIterable;
-//import com.mongodb.client.MongoCollection;
-//import com.mongodb.client.MongoDatabase;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.List;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-
 
 /**
  *
@@ -385,64 +371,25 @@ public class Login extends javax.swing.JFrame {
 
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
             
-            //Connection conn = null;
-            //PreparedStatement st = null;
-            //ResultSet rs = null;
-            //conn=Mysql.ConnectDB();
+            Connection conn = null;
+            PreparedStatement st = null;
+            ResultSet rs = null;
+            conn=Mysql.ConnectDB();
             
          try
          { 
              Hash h=new Hash();
-             Mongo m = new Mongo("localhost",27017);
-             DB db = m.getDB("timeline");
-             //System.out.println("anetha");
-            // MongoCredential 
-             
-             //boolean a;
              String hash=h.encrypt(new String(password_field.getPassword()));
-         //   String s = "select * from users where username='"+username_field.getText()+ "' and password='"+hash+"'";
+            String s = "select * from users where username='"+username_field.getText()+ "' and password='"+hash+"'";
              
-           // st = conn.prepareStatement(s);
+            st = conn.prepareStatement(s);
 //            st.setString(1,username_field.getText());
 //            st.setString(2,hash);
-            //rs = st.executeQuery(s);
-               // a = db.auth("user","password".toCharArray());
-              // BasicDBObject fields = new BasicDBObject().append("username",1);
-            //   BasicDBObject query = new BasicDBObject().append("username",username_field);
-          //     DBCursor results = Collection.find(query,fields);
-              
-                DBCollection collection =   db.getCollection("loginform");
-                 BasicDBObject andq = new BasicDBObject();
-               //List field = new ArrayList() ;
-               
-               // BasicDBObject field = new BasicDBObject();
-                ArrayList<BasicDBObject> obj = new ArrayList<BasicDBObject>();
-                //field.append("username",username_field.getText());
-                //field.append("password",password_field.getPassword());
-               // System.out.println("hi");
-               obj.add(new BasicDBObject("username",username_field.getText()));
-               obj.add(new BasicDBObject("password",hash));
-                andq.put("$and",obj);
-                DBCursor cursor = collection.find(andq);
-                //System.out.println("hello");
+            rs = st.executeQuery(s);
                 
-               
-                   if(cursor.count()==1)
-                   {
-               
-                System.out.println("succesfully logged in");
-                   }
-                   else
-                   {
-                       System.out.println("incorrect");
-                       JOptionPane.showMessageDialog(null,"incorrect login id");
-                   }
-           /*if(db.count = 1)
+                
+           if(rs.next())
            {
-              // DBCollection table = (DBCollection) db.getCollection("user");
-               //BasicDBObject document = new BasicDBObject();
-               //document.put("name","mkyong");
-               //table.insert(document);
                homepage front = new homepage();
                front.setVisible(true);
                
@@ -452,13 +399,12 @@ public class Login extends javax.swing.JFrame {
 //               String name=rs.getString("email");
                System.out.println(rs.getString("email"));
                JOptionPane.showMessageDialog(null,"Create an account to login");
-           }*/
+           }
 // TODO add your handling code here:
     }//GEN-LAST:event_loginActionPerformed
 catch (Exception e)
 {
     JOptionPane.showMessageDialog(null,e.getMessage());
-    //System.out.println("Create an account");
 }
     }
     private void signupMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_signupMouseClicked
